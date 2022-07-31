@@ -19,19 +19,24 @@ export const expenseSlice = createSlice({
     name: 'expense',
     initialState,
     reducers: {
-        setExpense: (state, action) => {
+        addExpense: (state, action) => {
             state.expense = [
                 ...state.expense,
                 {
-                    id: action.payload[0].id,
-                    title: action.payload[0].title,
-                    amount: action.payload[0].amount,
-                    date: action.payload[0].date,
+                    id: action.payload.id,
+                    title: action.payload.title,
+                    amount: action.payload.amount,
+                    date: action.payload.date,
                 },
             ]
+        },
+        deleteExpense: (state, action) => {
+            state.expense = state.expense.filter(
+                ({ id }) => id !== action.payload.id
+            )
         },
     },
 })
 
-export const { setExpense } = expenseSlice.actions
+export const { addExpense, deleteExpense } = expenseSlice.actions
 export default expenseSlice.reducer

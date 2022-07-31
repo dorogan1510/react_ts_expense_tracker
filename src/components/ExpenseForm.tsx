@@ -9,7 +9,7 @@ import AddIcon from '@mui/icons-material/Add'
 import { useDispatch, useSelector } from 'react-redux'
 import { setAmount, setTitle, setDate } from '../features/form/formSlice'
 import { expense, selectAmount, selectDate, selectTitle } from '../store/store'
-import { setExpense } from '../features/form/expenseSlice'
+import { addExpense } from '../features/form/expenseSlice'
 
 const ExpenseForm = () => {
     const dispatch = useDispatch()
@@ -35,17 +35,15 @@ const ExpenseForm = () => {
             enteredDate !== null
         ) {
             dispatch(
-                setExpense([
-                    {
-                        id: Math.random().toString(),
-                        title: enteredTitle,
-                        amount: enteredAmount,
-                        date: new Date(enteredDate),
-                    },
-                ])
+                addExpense({
+                    id: Math.random().toString(),
+                    title: enteredTitle,
+                    amount: enteredAmount,
+                    date: new Date(enteredDate),
+                })
             )
+            console.log(newExpense, enteredTitle)
         }
-        console.log(newExpense, enteredTitle)
     }
 
     return (
