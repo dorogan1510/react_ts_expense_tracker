@@ -7,9 +7,9 @@ import FormControlUnstyled from '@mui/base/FormControlUnstyled'
 import AddIcon from '@mui/icons-material/Add'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { setAmount, setTitle, setDate } from '../features/form/formSlice'
+import { setAmount, setTitle, setDate } from '../features/formSlice'
 import { expense, selectAmount, selectDate, selectTitle } from '../store/store'
-import { addExpense } from '../features/form/expenseSlice'
+import { addExpense } from '../features/expenseSlice'
 
 const ExpenseForm = () => {
     const dispatch = useDispatch()
@@ -17,8 +17,6 @@ const ExpenseForm = () => {
     const enteredAmount = useSelector(selectAmount)
     const enteredDate = useSelector(selectDate)
     const newExpense = useSelector(expense)
-
-    // const [enteredAmount, setEnteredAmount] = useState<number | string>('')
 
     const titleChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) =>
         dispatch(setTitle(event.target.value))
@@ -28,7 +26,7 @@ const ExpenseForm = () => {
         dispatch(setDate(newValue))
     }
 
-    const formSubmitHandler = (event: any) => {
+    const formSubmitHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
         if (
             enteredTitle.trim().length > 0 &&
             enteredAmount! > 0 &&
@@ -42,7 +40,6 @@ const ExpenseForm = () => {
                     date: new Date(enteredDate),
                 })
             )
-            console.log(newExpense, enteredTitle)
         }
     }
 

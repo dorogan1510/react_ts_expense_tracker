@@ -2,6 +2,8 @@ import React from 'react'
 import ExpenseForm from './components/ExpenseForm'
 import { Box, Paper } from '@mui/material'
 import ExpenseList from './components/ExpenseList'
+import { useSelector } from 'react-redux'
+import { expense } from './store/store'
 
 const App = () => {
     return (
