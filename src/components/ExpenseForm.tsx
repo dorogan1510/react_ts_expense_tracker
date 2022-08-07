@@ -1,29 +1,67 @@
-import React, { useState } from 'react'
-import { TextField, Box, Paper, Button, Fab } from '@mui/material'
+import React from 'react'
+import { TextField, Box, Paper, Button } from '@mui/material'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import FormControlUnstyled from '@mui/base/FormControlUnstyled'
-import AddIcon from '@mui/icons-material/Add'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { setAmount, setTitle, setDate } from '../features/formSlice'
-import { expense, selectAmount, selectDate, selectTitle } from '../store/store'
-import { addExpense } from '../features/expenseSlice'
+import { setAmount, setTitle, setDate } from '../store/features/formSlice'
+import {
+    chart,
+    expense,
+    filteredMonth,
+    selectAmount,
+    selectDate,
+    selectTitle,
+} from '../store/store'
+import { addExpense } from '../store/features/expenseSlice'
+import BarChart from '../Chart/BarChart'
+import {
+    IchartData,
+    setChart,
+    setChartSame,
+} from '../store/features/chartSlice'
 
 const ExpenseForm = () => {
     const dispatch = useDispatch()
     const enteredTitle = useSelector(selectTitle)
     const enteredAmount = useSelector(selectAmount)
     const enteredDate = useSelector(selectDate)
-    const newExpense = useSelector(expense)
+    const chartAmount = useSelector(chart)
 
     const titleChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) =>
         dispatch(setTitle(event.target.value))
     const amountChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) =>
-        dispatch(setAmount(event.target.value))
+        dispatch(setAmount(Number(event.target.value)))
     const dateChangeHandler = (newValue: Date | null) => {
         dispatch(setDate(newValue))
+    }
+
+    const newChartItem = {
+        id: Math.random(),
+        x: enteredDate?.toLocaleString('en-EN', {
+            month: 'short',
+        }),
+        y: enteredAmount,
+    }
+
+    const plusChartAmount = (object: IchartData) => {
+        const exist = chartAmount.find(item => item.x === object.x)
+
+        if (exist && exist !== null) {
+            dispatch(
+                setChartSame(
+                    chartAmount.map(item =>
+                        item.x === object.x
+                            ? { ...exist, y: exist.y + enteredAmount }
+                            : item
+                    )
+                )
+            )
+        } else {
+            dispatch(setChart(newChartItem))
+        }
     }
 
     const formSubmitHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -40,11 +78,19 @@ const ExpenseForm = () => {
                     date: new Date(enteredDate),
                 })
             )
+
+            plusChartAmount(newChartItem)
         }
+
+        // dispatch(setTitle(''))
+        // dispatch(setAmount(''))
+        // dispatch(setDate(null))
     }
 
     return (
         <>
+            <BarChart />
+
             <FormControlUnstyled defaultValue='' required>
                 <Box
                     sx={{
