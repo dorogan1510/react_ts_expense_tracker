@@ -18,7 +18,7 @@ export const chartSlice = createSlice({
     name: 'chart',
     initialState,
     reducers: {
-        setChart: (state, action) => {
+        setChart: (state, action: PayloadAction<IchartData>) => {
             state.chart = [
                 ...state.chart,
                 {
@@ -27,17 +27,25 @@ export const chartSlice = createSlice({
                     y: action.payload.y,
                 },
             ]
+            const temp = JSON.stringify(state.chart)
+            localStorage.setItem('chart', temp)
         },
-        setChartSame: (state, action) => {
+        setChartSame: (state, action: PayloadAction<IchartData[]>) => {
             state.chart = action.payload
+            const temp = JSON.stringify(state.chart)
+            localStorage.setItem('chart', temp)
         },
         deleteChart: (state, action) => {
             state.chart = state.chart.filter(
                 ({ id }) => id !== action.payload.id
             )
         },
+        setChartToLocalStorage: (state, action) => {
+            state.chart = action.payload
+        },
     },
 })
 
-export const { setChart, setChartSame, deleteChart } = chartSlice.actions
+export const { setChart, setChartSame, deleteChart, setChartToLocalStorage } =
+    chartSlice.actions
 export default chartSlice.reducer

@@ -42,6 +42,8 @@ export const expenseSlice = createSlice({
             state.filterExpense = state.filterExpense.filter(
                 ({ id }) => id !== action.payload.id
             )
+            const temp = JSON.stringify(state.expense)
+            localStorage.setItem('expense', temp)
         },
         setFilterExpense: (state, action: PayloadAction<string>) => {
             state.filterExpense = state.expense.filter(item => {

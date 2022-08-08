@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { green, lightBlue } from '@mui/material/colors'
 import { Iexpense, setExpenseToLocalStorage } from './features/expenseSlice'
+import { setChartToLocalStorage } from './features/chartSlice'
 
 const App = () => {
     const theme = createTheme({
@@ -35,6 +36,12 @@ const App = () => {
                 }))
             )
         )
+    }, [])
+    useEffect(() => {
+        const temp: any = localStorage.getItem('chart')
+        const loadedChart = JSON.parse(temp)
+
+        dispatch(setChartToLocalStorage(loadedChart))
     }, [])
 
     return (
