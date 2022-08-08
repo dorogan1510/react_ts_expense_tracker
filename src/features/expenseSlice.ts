@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 export interface Iexpense {
     id: string
     title: string
-    amount: number
+    amount: number | string
     date: any
 }
 
@@ -21,7 +21,7 @@ export const expenseSlice = createSlice({
     name: 'expense',
     initialState,
     reducers: {
-        addExpense: (state, action) => {
+        addExpense: (state, action: PayloadAction<Iexpense>) => {
             state.expense = [
                 ...state.expense,
                 {
@@ -31,8 +31,11 @@ export const expenseSlice = createSlice({
                     date: action.payload.date,
                 },
             ]
+
+            const temp = JSON.stringify(state.expense)
+            localStorage.setItem('expense', temp)
         },
-        deleteExpense: (state, action) => {
+        deleteExpense: (state, action: PayloadAction<Iexpense>) => {
             state.expense = state.expense.filter(
                 ({ id }) => id !== action.payload.id
             )
@@ -40,7 +43,7 @@ export const expenseSlice = createSlice({
                 ({ id }) => id !== action.payload.id
             )
         },
-        setFilterExpense: (state, action) => {
+        setFilterExpense: (state, action: PayloadAction<string>) => {
             state.filterExpense = state.expense.filter(item => {
                 return item.date.getMonth().toString() === action.payload
             })
@@ -50,6 +53,12 @@ export const expenseSlice = createSlice({
                 return item
             })
         },
+        setExpenseToLocalStorage: (
+            state,
+            action: PayloadAction<Iexpense[]>
+        ) => {
+            state.expense = action.payload
+        },
     },
 })
 
@@ -58,5 +67,6 @@ export const {
     deleteExpense,
     setFilterExpense,
     setNoFilterExpense,
+    setExpenseToLocalStorage,
 } = expenseSlice.actions
 export default expenseSlice.reducer

@@ -73,9 +73,7 @@ const ExpensesFilter = ({
                     </Select>
                 </FormControl>
 
-                <Button type='button' onClick={cancelFilterHandler}>
-                    Cancel
-                </Button>
+                <Button onClick={cancelFilterHandler}>Cancel</Button>
             </Box>
         </motion.div>
     )

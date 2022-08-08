@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { TextField, Box, Paper, Button } from '@mui/material'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
@@ -6,22 +6,16 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import FormControlUnstyled from '@mui/base/FormControlUnstyled'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { setAmount, setTitle, setDate } from '../store/features/formSlice'
+import { setAmount, setTitle, setDate } from '../features/formSlice'
 import {
     chart,
     expense,
-    filteredMonth,
     selectAmount,
     selectDate,
     selectTitle,
 } from '../store/store'
-import { addExpense } from '../store/features/expenseSlice'
-import BarChart from '../Chart/BarChart'
-import {
-    IchartData,
-    setChart,
-    setChartSame,
-} from '../store/features/chartSlice'
+import { addExpense } from '../features/expenseSlice'
+import { IchartData, setChart, setChartSame } from '../features/chartSlice'
 
 const ExpenseForm = () => {
     const dispatch = useDispatch()
@@ -29,6 +23,10 @@ const ExpenseForm = () => {
     const enteredAmount = useSelector(selectAmount)
     const enteredDate = useSelector(selectDate)
     const chartAmount = useSelector(chart)
+
+    const [isTitle, setIsTitle] = useState(true)
+    const [isAmount, setIsAmount] = useState(true)
+    const [isDate, setIsDate] = useState(true)
 
     const titleChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) =>
         dispatch(setTitle(event.target.value))
@@ -53,7 +51,9 @@ const ExpenseForm = () => {
             dispatch(
                 setChartSame(
                     chartAmount.map(item =>
-                        item.x === object.x
+                        item.x === object.x &&
+                        typeof exist.y !== 'string' &&
+                        typeof enteredAmount !== 'string'
                             ? { ...exist, y: exist.y + enteredAmount }
                             : item
                     )
@@ -80,17 +80,39 @@ const ExpenseForm = () => {
             )
 
             plusChartAmount(newChartItem)
+
+            dispatch(setTitle(''))
+            dispatch(setAmount(''))
+            dispatch(setDate(null))
         }
 
-        // dispatch(setTitle(''))
-        // dispatch(setAmount(''))
-        // dispatch(setDate(null))
+        if (enteredTitle.trim().length <= 0) {
+            setIsTitle(false)
+        }
+
+        if (enteredAmount <= 0) {
+            setIsAmount(false)
+        }
+
+        if (enteredDate == null) {
+            setIsDate(false)
+        }
     }
+
+    useEffect(() => {
+        setIsTitle(true)
+    }, [enteredTitle])
+
+    useEffect(() => {
+        setIsAmount(true)
+    }, [enteredAmount])
+
+    useEffect(() => {
+        setIsDate(true)
+    }, [enteredDate])
 
     return (
         <>
-            <BarChart />
-
             <FormControlUnstyled defaultValue='' required>
                 <Box
                     sx={{
@@ -115,6 +137,7 @@ const ExpenseForm = () => {
                             }}
                         >
                             <TextField
+                                error={!isTitle}
                                 id='title'
                                 label='Title'
                                 size='medium'
@@ -124,6 +147,7 @@ const ExpenseForm = () => {
                                 sx={{ width: '33%' }}
                             />
                             <TextField
+                                error={!isAmount}
                                 id='amount'
                                 label='Amount'
                                 type='number'
@@ -138,7 +162,10 @@ const ExpenseForm = () => {
                                     value={enteredDate}
                                     onChange={dateChangeHandler}
                                     renderInput={params => (
-                                        <TextField {...params} />
+                                        <TextField
+                                            {...params}
+                                            error={!isDate}
+                                        />
                                     )}
                                 />
                             </LocalizationProvider>
@@ -152,7 +179,6 @@ const ExpenseForm = () => {
                             >
                                 Add expense
                             </Button>
-                            <Button variant='contained'>Cancel</Button>
                         </Box>
                     </Paper>
                 </Box>

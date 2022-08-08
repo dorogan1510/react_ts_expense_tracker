@@ -1,6 +1,5 @@
 import {
     Box,
-    Button,
     Card,
     CardActions,
     CardContent,
@@ -13,6 +12,7 @@ import { useDispatch } from 'react-redux'
 import { deleteExpense, Iexpense } from '../features/expenseSlice'
 import { AnimatePresence, motion } from 'framer-motion'
 import DeleteIcon from '@mui/icons-material/Delete'
+import { deleteChart } from '../features/chartSlice'
 
 const ExpenseItem = ({ expenses }: any) => {
     const dispatch = useDispatch()
@@ -35,6 +35,11 @@ const ExpenseItem = ({ expenses }: any) => {
         )
     }
 
+    const deleteItemsHandler = (item: Iexpense) => {
+        dispatch(deleteExpense(item))
+        dispatch(deleteChart(item))
+    }
+
     return (
         <AnimatePresence>
             {expenses.map((item: Iexpense) => (
@@ -42,7 +47,6 @@ const ExpenseItem = ({ expenses }: any) => {
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
                         transition={{ duration: 0.2 }}
                     >
                         <Paper
@@ -126,9 +130,7 @@ const ExpenseItem = ({ expenses }: any) => {
                                 <CardActions>
                                     <IconButton
                                         aria-label='delete'
-                                        onClick={() => {
-                                            dispatch(deleteExpense(item))
-                                        }}
+                                        onClick={() => deleteItemsHandler(item)}
                                     >
                                         <DeleteIcon color='primary' />
                                     </IconButton>

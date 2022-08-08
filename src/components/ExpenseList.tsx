@@ -2,6 +2,7 @@ import { Box, Button, Typography } from '@mui/material'
 import { motion } from 'framer-motion'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import BarChart from '../Chart/BarChart'
 import { setFilterExpense, setNoFilterExpense } from '../features/expenseSlice'
 import { changeMonth } from '../features/filterSlice'
 import { expense, filteredMonth, filterExpense } from '../store/store'
@@ -15,24 +16,17 @@ const ExpenseList = () => {
     const dispatch = useDispatch()
 
     const [isfiltered, setIsFiltered] = useState(true)
-
-    // const projects = useSelector(
-    //     // could move this function to another file
-    //     // this could be written more concisely, but I'm trying to be clear instead
-    //     state => {
-    //         const all = newExpense
-    //         const filterId = newFilterExpense
-    //         if (newFilterExpense === null) {
-    //             return newExpense
-    //         } else {
-    //             return newExpense.filter(project => project.id === filterId)
-    //         }
-    //     }
-    // )
+    const [isStatistics, setIsStatistics] = useState(true)
 
     const startFilterHandler = () => {
         setIsFiltered(false)
         dispatch(setFilterExpense(selectedMonth))
+    }
+    const startStasticHandler = () => {
+        setIsStatistics(false)
+    }
+    const cancelStasticHandler = () => {
+        setIsStatistics(true)
     }
 
     const cancelFilterHandler = () => {
@@ -64,16 +58,20 @@ const ExpenseList = () => {
 
     return (
         <>
+            {!isStatistics && (
+                <BarChart cancelStasticHandler={cancelStasticHandler} />
+            )}
             {isfiltered ? (
                 <>
-                    <Box sx={{ textAlign: 'center' }}>
-                        <Button
-                            className='expenses'
-                            type='button'
-                            onClick={startFilterHandler}
-                        >
+                    <Box sx={{ textAlign: 'center', margin: '1rem 0' }}>
+                        <Button type='button' onClick={startFilterHandler}>
                             Filter
                         </Button>
+                        {isStatistics && (
+                            <Button type='button' onClick={startStasticHandler}>
+                                Statistics
+                            </Button>
+                        )}
                     </Box>
                     <ExpenseItem expenses={newExpense} />
                 </>
