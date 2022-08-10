@@ -13,7 +13,7 @@ import { motion } from 'framer-motion'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setFilterExpense } from '../features/expenseSlice'
-import { filteredMonth } from '../store/store'
+import { expense, filteredMonth } from '../store/store'
 
 const ExpensesFilter = ({
     filterChangeHandler,
@@ -29,10 +29,11 @@ const ExpensesFilter = ({
     const dispatch = useDispatch()
 
     const selectedMonth = useSelector(filteredMonth)
+    const newExpense = useSelector(expense)
 
     useEffect(() => {
         dispatch(setFilterExpense(selectedMonth))
-    }, [selectedMonth])
+    }, [selectedMonth, newExpense])
 
     return (
         <motion.div

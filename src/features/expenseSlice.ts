@@ -4,7 +4,7 @@ export interface Iexpense {
     id: string
     title: string
     amount: number | string
-    date: any
+    date: Date
 }
 
 interface IexpenseSliceState {
@@ -51,9 +51,7 @@ export const expenseSlice = createSlice({
             })
         },
         setNoFilterExpense: (state, action) => {
-            state.expense = state.expense.filter(item => {
-                return item
-            })
+            state.expense = state.expense.filter(item => item)
         },
         setExpenseToLocalStorage: (
             state,

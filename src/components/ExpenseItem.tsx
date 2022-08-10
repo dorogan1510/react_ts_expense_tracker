@@ -8,14 +8,16 @@ import {
     Typography,
 } from '@mui/material'
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { deleteExpense, Iexpense } from '../features/expenseSlice'
 import { AnimatePresence, motion } from 'framer-motion'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { deleteChart } from '../features/chartSlice'
+import { chart } from '../store/store'
 
 const ExpenseItem = ({ expenses }: any) => {
     const dispatch = useDispatch()
+    const chartAmount = useSelector(chart)
 
     if (expenses.length === 0) {
         return (
@@ -35,9 +37,37 @@ const ExpenseItem = ({ expenses }: any) => {
         )
     }
 
+    const deleteChartAmount = (object: Iexpense) => {
+        const exist = chartAmount.find(
+            item =>
+                item.x ===
+                object.date.toLocaleString('en-EN', {
+                    month: 'short',
+                })
+        )
+
+        if (exist) {
+            dispatch(
+                deleteChart(
+                    chartAmount.map(item =>
+                        item.x ===
+                            object.date.toLocaleString('en-EN', {
+                                month: 'short',
+                            }) &&
+                        typeof object.amount === 'number' &&
+                        typeof exist.y === 'number'
+                            ? { ...exist, y: exist.y - object.amount }
+                            : item
+                    )
+                )
+            )
+        }
+    }
+
     const deleteItemsHandler = (item: Iexpense) => {
         dispatch(deleteExpense(item))
-        dispatch(deleteChart(item))
+
+        deleteChartAmount(item)
     }
 
     return (

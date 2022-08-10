@@ -2,11 +2,12 @@ import React, { useEffect } from 'react'
 import ExpenseForm from './components/ExpenseForm'
 import { Box, Paper } from '@mui/material'
 import ExpenseList from './components/ExpenseList'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { green, lightBlue } from '@mui/material/colors'
 import { Iexpense, setExpenseToLocalStorage } from './features/expenseSlice'
-import { setChartToLocalStorage } from './features/chartSlice'
+import { deleteChart, setChartToLocalStorage } from './features/chartSlice'
+import { chart } from './store/store'
 
 const App = () => {
     const theme = createTheme({
@@ -21,28 +22,46 @@ const App = () => {
     })
 
     const dispatch = useDispatch()
+    const chartAmount = useSelector(chart)
 
     useEffect(() => {
-        const temp: any = localStorage.getItem('expense')
-        const loadedExpense = JSON.parse(temp)
+        const temp: string | null = localStorage.getItem('expense')
+        const loadedExpense = JSON.parse(temp || '')
 
-        dispatch(
-            setExpenseToLocalStorage(
-                loadedExpense.map((item: Iexpense) => ({
-                    id: item.id,
-                    title: item.title,
-                    amount: item.amount,
-                    date: new Date(item.date),
-                }))
+        if (loadedExpense) {
+            dispatch(
+                setExpenseToLocalStorage(
+                    loadedExpense.map((item: Iexpense) => ({
+                        id: item.id,
+                        title: item.title,
+                        amount: item.amount,
+                        date: new Date(item.date),
+                    }))
+                )
             )
-        )
+        }
     }, [])
     useEffect(() => {
-        const temp: any = localStorage.getItem('chart')
-        const loadedChart = JSON.parse(temp)
+        const temp: string | null = localStorage.getItem('chart')
+        const loadedChart = JSON.parse(temp || '')
 
-        dispatch(setChartToLocalStorage(loadedChart))
+        if (loadedChart) {
+            dispatch(setChartToLocalStorage(loadedChart))
+        }
+
+        console.log(loadedChart)
     }, [])
+
+    useEffect(() => {
+        const chartAmountYNull = chartAmount.find(item => item.y === 0)
+        if (chartAmountYNull) {
+            dispatch(
+                deleteChart(
+                    chartAmount.filter(({ id }) => id !== chartAmountYNull.id)
+                )
+            )
+        }
+    }, [chartAmount])
 
     return (
         <ThemeProvider theme={theme}>

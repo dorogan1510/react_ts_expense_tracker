@@ -36,7 +36,7 @@ const ExpenseForm = () => {
         dispatch(setDate(newValue))
     }
 
-    const newChartItem = {
+    const newChartItem: IchartData = {
         id: Math.random(),
         x: enteredDate?.toLocaleString('en-EN', {
             month: 'short',
@@ -149,7 +149,7 @@ const ExpenseForm = () => {
                             <TextField
                                 error={!isAmount}
                                 id='amount'
-                                label='Amount'
+                                label='Amount, $'
                                 type='number'
                                 size='medium'
                                 value={enteredAmount}

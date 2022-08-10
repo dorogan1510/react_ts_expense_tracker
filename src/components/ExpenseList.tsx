@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from '@mui/material'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import BarChart from '../Chart/BarChart'
@@ -59,7 +59,9 @@ const ExpenseList = () => {
     return (
         <>
             {!isStatistics && (
-                <BarChart cancelStasticHandler={cancelStasticHandler} />
+                <AnimatePresence>
+                    <BarChart cancelStasticHandler={cancelStasticHandler} />
+                </AnimatePresence>
             )}
             {isfiltered ? (
                 <>

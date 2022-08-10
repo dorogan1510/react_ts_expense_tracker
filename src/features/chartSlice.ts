@@ -35,12 +35,16 @@ export const chartSlice = createSlice({
             const temp = JSON.stringify(state.chart)
             localStorage.setItem('chart', temp)
         },
-        deleteChart: (state, action) => {
-            state.chart = state.chart.filter(
-                ({ id }) => id !== action.payload.id
-            )
+        deleteChart: (state, action: PayloadAction<IchartData[]>) => {
+            state.chart = action.payload
+            const temp = JSON.stringify(state.chart)
+            localStorage.setItem('chart', temp)
         },
-        setChartToLocalStorage: (state, action) => {
+
+        setChartToLocalStorage: (
+            state,
+            action: PayloadAction<IchartData[]>
+        ) => {
             state.chart = action.payload
         },
     },
