@@ -50,7 +50,7 @@ const ExpenseItem = ({ expenses }: any) => {
         if (editText.trim().length > 0) {
             setIsEditTextStart(true)
         }
-        if (editAmount > 0) {
+        if (Number(editAmount) > 0) {
             setIsEditAmountStart(true)
         }
         if (editDate !== null) {
@@ -79,7 +79,10 @@ const ExpenseItem = ({ expenses }: any) => {
                         typeof exist.y === 'number'
                             ? {
                                   ...exist,
-                                  y: exist.y - object.amount + editAmount,
+                                  y:
+                                      exist.y -
+                                      object.amount +
+                                      Number(editAmount),
                               }
                             : item
                     )
@@ -96,6 +99,8 @@ const ExpenseItem = ({ expenses }: any) => {
                     month: 'short',
                 })
         )
+
+        console.log(exist)
 
         if (exist) {
             dispatch(
@@ -120,13 +125,17 @@ const ExpenseItem = ({ expenses }: any) => {
             ? setIsEditTextStart(true)
             : setIsEditTextStart(false)
 
-        editAmount > 0
+        Number(editAmount) > 0
             ? setIsEditAmountStart(true)
             : setIsEditAmountStart(false)
 
         editDate !== null ? setIsEditDateStart(true) : setIsEditDateStart(false)
 
-        if (editText.trim().length > 0 && editAmount > 0 && editDate !== null) {
+        if (
+            editText.trim().length > 0 &&
+            Number(editAmount) > 0 &&
+            editDate !== null
+        ) {
             setIsEditTextStart(true)
 
             const exist = newExpense.find(item => item.id === object.id)
@@ -161,7 +170,7 @@ const ExpenseItem = ({ expenses }: any) => {
                     x: editDate?.toLocaleString('en-EN', {
                         month: 'short',
                     }),
-                    y: editAmount,
+                    y: Number(editAmount),
                 }
                 dispatch(setChart(newChartItem))
             }
@@ -172,9 +181,9 @@ const ExpenseItem = ({ expenses }: any) => {
             setIsEditAmountClick(false)
             setIsEditDateClick(false)
         } else {
-            setIsEditTextStart(false)
-            setIsEditAmountStart(false)
-            setIsEditDateStart(false)
+            editText.trim().length <= 0 && setIsEditTextStart(false)
+            Number(editAmount) <= 0 && setIsEditAmountStart(false)
+            editDate == null && setIsEditDateStart(false)
         }
     }
 
@@ -183,10 +192,12 @@ const ExpenseItem = ({ expenses }: any) => {
         deleteChartAmount(item)
     }
 
-    const editHandler = (id: string) => {
-        setIsEditingExpense(id)
+    const editHandler = (item: Iexpense) => {
+        setIsEditingExpense(item.id)
 
-        // dispatch(editExpense(updatedExpense))
+        setEditText(item.title)
+        setEditAmount(Number(item.amount))
+        setEditDate(item.date)
     }
 
     if (expenses.length === 0) {
@@ -232,10 +243,11 @@ const ExpenseItem = ({ expenses }: any) => {
                                     <Card
                                         sx={{
                                             display: 'flex',
-                                            flexWrap: {
-                                                xs: 'wrap',
-                                                md: 'nowrap',
+                                            flexDirection: {
+                                                xs: 'column',
+                                                sm: 'row',
                                             },
+                                            width: { xs: '100%' },
                                             justifyContent: 'space-between',
                                             minWidth: 275,
                                         }}
@@ -244,6 +256,7 @@ const ExpenseItem = ({ expenses }: any) => {
                                             sx={{
                                                 display: 'flex',
                                                 justifyContent: 'space-between',
+                                                margin: { xs: '0 auto' },
                                             }}
                                         >
                                             <CardActionArea
@@ -261,6 +274,7 @@ const ExpenseItem = ({ expenses }: any) => {
                                                         }
                                                     >
                                                         <DatePicker
+                                                            inputFormat='dd/MM/yyyy'
                                                             label='Date'
                                                             value={editDate}
                                                             onChange={
@@ -329,7 +343,10 @@ const ExpenseItem = ({ expenses }: any) => {
                                         <Box
                                             sx={{
                                                 display: 'flex',
-                                                justifyContent: 'space-between',
+                                                justifyContent: {
+                                                    xs: 'center',
+                                                    sm: 'space-between',
+                                                },
                                                 alignItems: 'center',
                                                 flex: '1 1',
                                             }}
@@ -350,7 +367,7 @@ const ExpenseItem = ({ expenses }: any) => {
                                                         backgroundColor:
                                                             editColor,
                                                         borderRadius: '10px',
-                                                        padding: '1rem',
+                                                        padding: '0.7rem',
                                                     }}
                                                     onClick={() =>
                                                         setIsEditTitleClick(
@@ -399,7 +416,10 @@ const ExpenseItem = ({ expenses }: any) => {
                                             >
                                                 <CardActionArea
                                                     sx={{
-                                                        marginLeft: '2rem',
+                                                        marginLeft: {
+                                                            xs: '0.5rem',
+                                                            sm: '2rem',
+                                                        },
                                                         backgroundColor:
                                                             editColor,
                                                         borderRadius: '10px',
@@ -436,7 +456,7 @@ const ExpenseItem = ({ expenses }: any) => {
                                                         />
                                                     ) : (
                                                         <Typography
-                                                            variant='h5'
+                                                            variant='body1'
                                                             component='div'
                                                         >
                                                             ${item.amount}
@@ -445,7 +465,13 @@ const ExpenseItem = ({ expenses }: any) => {
                                                 </CardActionArea>
                                             </Box>
                                         </Box>
-                                        <CardActions>
+                                        <CardActions
+                                            sx={{
+                                                justifyContent: {
+                                                    xs: 'center',
+                                                },
+                                            }}
+                                        >
                                             <Button
                                                 className='buttons'
                                                 onClick={() =>
@@ -528,7 +554,7 @@ const ExpenseItem = ({ expenses }: any) => {
                                             {item.title}
                                         </Typography>
                                         <Typography
-                                            variant='h6'
+                                            variant='body1'
                                             component='div'
                                         >
                                             ${item.amount}
@@ -537,7 +563,7 @@ const ExpenseItem = ({ expenses }: any) => {
                                     <CardActions>
                                         <IconButton
                                             aria-label='edit'
-                                            onClick={() => editHandler(item.id)}
+                                            onClick={() => editHandler(item)}
                                             sx={{ marginLeft: '8px' }}
                                         >
                                             <EditIcon color='primary' />

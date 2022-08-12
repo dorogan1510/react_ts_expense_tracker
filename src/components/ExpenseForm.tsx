@@ -144,7 +144,10 @@ const ExpenseForm = () => {
                                 type='text'
                                 value={enteredTitle}
                                 onChange={titleChangeHandler}
-                                sx={{ width: '33%' }}
+                                sx={{
+                                    width: { xs: '100%', sm: '33%' },
+                                    maxWidth: { xs: '222px' },
+                                }}
                             />
                             <TextField
                                 error={!isAmount}
@@ -154,10 +157,14 @@ const ExpenseForm = () => {
                                 size='medium'
                                 value={enteredAmount}
                                 onChange={amountChangeHandler}
-                                sx={{ width: '33%' }}
+                                sx={{
+                                    width: { xs: '100%', sm: '33%' },
+                                    maxWidth: { xs: '222px' },
+                                }}
                             />
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                 <DatePicker
+                                    inputFormat='dd/MM/yyyy'
                                     label='Date'
                                     value={enteredDate}
                                     onChange={dateChangeHandler}

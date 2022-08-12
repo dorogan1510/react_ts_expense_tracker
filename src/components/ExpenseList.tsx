@@ -66,13 +66,21 @@ const ExpenseList = () => {
             {isfiltered ? (
                 <>
                     <Box sx={{ textAlign: 'center', margin: '1rem 0' }}>
-                        <Button type='button' onClick={startFilterHandler}>
-                            Filter
-                        </Button>
                         {isStatistics && (
-                            <Button type='button' onClick={startStasticHandler}>
-                                Statistics
-                            </Button>
+                            <>
+                                <Button
+                                    type='button'
+                                    onClick={startFilterHandler}
+                                >
+                                    Filter
+                                </Button>
+                                <Button
+                                    type='button'
+                                    onClick={startStasticHandler}
+                                >
+                                    Statistics
+                                </Button>
+                            </>
                         )}
                     </Box>
                     <ExpenseItem expenses={newExpense} />
