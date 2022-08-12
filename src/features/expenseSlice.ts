@@ -45,6 +45,13 @@ export const expenseSlice = createSlice({
             const temp = JSON.stringify(state.expense)
             localStorage.setItem('expense', temp)
         },
+        editExpense: (state, action: PayloadAction<Iexpense[]>) => {
+            state.expense = action.payload
+
+            const temp = JSON.stringify(state.expense)
+            localStorage.setItem('expense', temp)
+        },
+
         setFilterExpense: (state, action: PayloadAction<string>) => {
             state.filterExpense = state.expense.filter(item => {
                 return item.date.getMonth().toString() === action.payload
@@ -68,5 +75,6 @@ export const {
     setFilterExpense,
     setNoFilterExpense,
     setExpenseToLocalStorage,
+    editExpense,
 } = expenseSlice.actions
 export default expenseSlice.reducer

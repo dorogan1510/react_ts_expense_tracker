@@ -25,8 +25,8 @@ const App = () => {
     const chartAmount = useSelector(chart)
 
     useEffect(() => {
-        const temp: string | null = localStorage.getItem('expense')
-        const loadedExpense = JSON.parse(temp || '')
+        const temp: any = localStorage.getItem('expense')
+        const loadedExpense = JSON.parse(temp)
 
         if (loadedExpense) {
             dispatch(
@@ -42,14 +42,12 @@ const App = () => {
         }
     }, [])
     useEffect(() => {
-        const temp: string | null = localStorage.getItem('chart')
-        const loadedChart = JSON.parse(temp || '')
+        const temp: any = localStorage.getItem('chart')
+        const loadedChart = JSON.parse(temp)
 
         if (loadedChart) {
             dispatch(setChartToLocalStorage(loadedChart))
         }
-
-        console.log(loadedChart)
     }, [])
 
     useEffect(() => {

@@ -40,6 +40,11 @@ export const chartSlice = createSlice({
             const temp = JSON.stringify(state.chart)
             localStorage.setItem('chart', temp)
         },
+        editChart: (state, action: PayloadAction<IchartData[]>) => {
+            state.chart = action.payload
+            const temp = JSON.stringify(state.chart)
+            localStorage.setItem('chart', temp)
+        },
 
         setChartToLocalStorage: (
             state,
@@ -50,6 +55,11 @@ export const chartSlice = createSlice({
     },
 })
 
-export const { setChart, setChartSame, deleteChart, setChartToLocalStorage } =
-    chartSlice.actions
+export const {
+    setChart,
+    setChartSame,
+    deleteChart,
+    setChartToLocalStorage,
+    editChart,
+} = chartSlice.actions
 export default chartSlice.reducer
