@@ -7,7 +7,7 @@ export interface Iexpense {
     date: Date
 }
 
-interface IexpenseSliceState {
+export interface IexpenseSliceState {
     expense: Iexpense[]
     filterExpense: Iexpense[]
 }

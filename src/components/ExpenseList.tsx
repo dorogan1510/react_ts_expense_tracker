@@ -15,8 +15,8 @@ const ExpenseList = () => {
     const selectedMonth = useSelector(filteredMonth)
     const dispatch = useDispatch()
 
-    const [isfiltered, setIsFiltered] = useState(true)
-    const [isStatistics, setIsStatistics] = useState(true)
+    const [isfiltered, setIsFiltered] = useState<boolean>(true)
+    const [isStatistics, setIsStatistics] = useState<boolean>(true)
 
     const startFilterHandler = () => {
         setIsFiltered(false)
@@ -50,7 +50,7 @@ const ExpenseList = () => {
                     component='div'
                     sx={{ padding: 3, textAlign: 'center' }}
                 >
-                    No expense
+                    No expenses
                 </Typography>
             </motion.div>
         )

@@ -21,6 +21,7 @@ import {
     editChart,
     IchartData,
     setChart,
+    setChartSame,
 } from '../features/chartSlice'
 import { chart, expense } from '../store/store'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
@@ -100,8 +101,6 @@ const ExpenseItem = ({ expenses }: any) => {
                 })
         )
 
-        console.log(exist)
-
         if (exist) {
             dispatch(
                 deleteChart(
@@ -161,7 +160,11 @@ const ExpenseItem = ({ expenses }: any) => {
                     })
             )
 
+            console.log(existChartMonth)
+
             if (existChartMonth) {
+                deleteChartAmount(object)
+
                 editChartAmount(object)
             } else {
                 deleteChartAmount(object)
@@ -235,6 +238,8 @@ const ExpenseItem = ({ expenses }: any) => {
                             sx={{ marginBottom: '1rem' }}
                         >
                             {isEditingExpense === item.id ? (
+                                // code after edit
+
                                 <motion.div
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
@@ -256,7 +261,13 @@ const ExpenseItem = ({ expenses }: any) => {
                                             sx={{
                                                 display: 'flex',
                                                 justifyContent: 'space-between',
-                                                margin: { xs: '0 auto' },
+                                                margin: {
+                                                    xs: '1rem auto',
+                                                    sm: '1rem',
+                                                },
+                                                backgroundColor: editColor,
+                                                padding: '0.7rem',
+                                                borderRadius: '10px',
                                             }}
                                         >
                                             <CardActionArea
@@ -267,77 +278,104 @@ const ExpenseItem = ({ expenses }: any) => {
                                                     setIsEditDateClick(true)
                                                 }
                                             >
-                                                {isEditDateClick ? (
-                                                    <LocalizationProvider
-                                                        dateAdapter={
-                                                            AdapterDateFns
-                                                        }
-                                                    >
-                                                        <DatePicker
-                                                            inputFormat='dd/MM/yyyy'
-                                                            label='Date'
-                                                            value={editDate}
-                                                            onChange={
-                                                                setEditDate
+                                                <motion.div
+                                                    initial={{ opacity: 0 }}
+                                                    animate={{ opacity: 1 }}
+                                                    transition={{
+                                                        duration: 0.2,
+                                                    }}
+                                                    exit={{ opacity: 0 }}
+                                                >
+                                                    {isEditDateClick ? (
+                                                        <LocalizationProvider
+                                                            dateAdapter={
+                                                                AdapterDateFns
                                                             }
-                                                            renderInput={(
-                                                                params: any
-                                                            ) => (
-                                                                <TextField
-                                                                    {...params}
-                                                                    error={
-                                                                        !isEditDateStart
-                                                                    }
-                                                                />
-                                                            )}
-                                                        />
-                                                    </LocalizationProvider>
-                                                ) : (
-                                                    <Paper
-                                                        elevation={5}
-                                                        sx={{
-                                                            padding: 3,
-                                                            textAlign: 'center',
-                                                            width: '50px',
-                                                            backgroundColor:
-                                                                editColor,
-                                                        }}
-                                                    >
-                                                        <Typography
-                                                            sx={{
-                                                                fontSize: 14,
-                                                            }}
-                                                            component='div'
-                                                            color='text.secondary'
-                                                            gutterBottom
                                                         >
-                                                            <Box className='expense-item__date__year'>
-                                                                {item.date.toLocaleString(
-                                                                    'en-EN',
-                                                                    {
-                                                                        year: 'numeric',
+                                                            <motion.div
+                                                                initial={{
+                                                                    opacity: 0,
+                                                                }}
+                                                                animate={{
+                                                                    opacity: 1,
+                                                                }}
+                                                                transition={{
+                                                                    duration: 0.2,
+                                                                }}
+                                                                exit={{
+                                                                    opacity: 0,
+                                                                }}
+                                                            >
+                                                                <DatePicker
+                                                                    inputFormat='dd/MM/yyyy'
+                                                                    label='Date'
+                                                                    value={
+                                                                        editDate
                                                                     }
-                                                                )}
-                                                            </Box>
-                                                            <Box className='expense-item__date__month'>
-                                                                {item.date.toLocaleString(
-                                                                    'en-EN',
-                                                                    {
-                                                                        month: 'long',
+                                                                    onChange={
+                                                                        setEditDate
                                                                     }
-                                                                )}
-                                                            </Box>
-                                                            <Box className='expense-item__date__day'>
-                                                                {item.date.toLocaleString(
-                                                                    'en-EN',
-                                                                    {
-                                                                        day: 'numeric',
-                                                                    }
-                                                                )}
-                                                            </Box>
-                                                        </Typography>
-                                                    </Paper>
-                                                )}
+                                                                    renderInput={(
+                                                                        params: any
+                                                                    ) => (
+                                                                        <TextField
+                                                                            {...params}
+                                                                            error={
+                                                                                !isEditDateStart
+                                                                            }
+                                                                        />
+                                                                    )}
+                                                                />
+                                                            </motion.div>
+                                                        </LocalizationProvider>
+                                                    ) : (
+                                                        <Paper
+                                                            elevation={5}
+                                                            sx={{
+                                                                padding: 3,
+                                                                textAlign:
+                                                                    'center',
+                                                                width: '50px',
+                                                                backgroundColor:
+                                                                    editColor,
+                                                            }}
+                                                        >
+                                                            <Typography
+                                                                sx={{
+                                                                    fontSize: 14,
+                                                                }}
+                                                                component='div'
+                                                                color='text.secondary'
+                                                                gutterBottom
+                                                            >
+                                                                <Box className='expense-item__date__year'>
+                                                                    {item.date.toLocaleString(
+                                                                        'en-EN',
+                                                                        {
+                                                                            year: 'numeric',
+                                                                        }
+                                                                    )}
+                                                                </Box>
+                                                                <Box className='expense-item__date__month'>
+                                                                    {item.date.toLocaleString(
+                                                                        'en-EN',
+                                                                        {
+                                                                            month: 'long',
+                                                                        }
+                                                                    )}
+                                                                </Box>
+                                                                <Box className='expense-item__date__day'>
+                                                                    {item.date.toLocaleString(
+                                                                        'en-EN',
+                                                                        {
+                                                                            day: 'numeric',
+                                                                        }
+                                                                    )}
+                                                                </Box>
+                                                            </Typography>
+                                                        </Paper>
+                                                    )}
+                                                </motion.div>
                                             </CardActionArea>
                                         </CardContent>
                                         <Box
@@ -349,6 +387,7 @@ const ExpenseItem = ({ expenses }: any) => {
                                                 },
                                                 alignItems: 'center',
                                                 flex: '1 1',
+                                                padding: { xs: '0 1rem' },
                                             }}
                                         >
                                             <Box
@@ -376,24 +415,40 @@ const ExpenseItem = ({ expenses }: any) => {
                                                     }
                                                 >
                                                     {isEditTitleClick ? (
-                                                        <TextField
-                                                            id='outlined-name'
-                                                            value={editText}
-                                                            label='Title'
-                                                            type='text'
-                                                            onChange={event =>
-                                                                setEditText(
-                                                                    event.target
-                                                                        .value
-                                                                )
-                                                            }
-                                                            error={
-                                                                !isEditTextStart
-                                                            }
-                                                            placeholder={
-                                                                'You didn`t write anything'
-                                                            }
-                                                        />
+                                                        <motion.div
+                                                            initial={{
+                                                                opacity: 0,
+                                                            }}
+                                                            animate={{
+                                                                opacity: 1,
+                                                            }}
+                                                            transition={{
+                                                                duration: 0.2,
+                                                            }}
+                                                            exit={{
+                                                                opacity: 0,
+                                                            }}
+                                                        >
+                                                            <TextField
+                                                                id='outlined-name'
+                                                                value={editText}
+                                                                label='Title'
+                                                                type='text'
+                                                                onChange={event =>
+                                                                    setEditText(
+                                                                        event
+                                                                            .target
+                                                                            .value
+                                                                    )
+                                                                }
+                                                                error={
+                                                                    !isEditTextStart
+                                                                }
+                                                                placeholder={
+                                                                    'You didn`t write anything'
+                                                                }
+                                                            />
+                                                        </motion.div>
                                                     ) : (
                                                         <Typography
                                                             variant='body1'
@@ -433,27 +488,44 @@ const ExpenseItem = ({ expenses }: any) => {
                                                     }
                                                 >
                                                     {isEditAmountClick ? (
-                                                        <TextField
-                                                            id='outlined-name'
-                                                            value={editAmount}
-                                                            label='Amount, $'
-                                                            type='number'
-                                                            onChange={event =>
-                                                                setEditAmount(
-                                                                    Number(
-                                                                        event
-                                                                            .target
-                                                                            .value
+                                                        <motion.div
+                                                            initial={{
+                                                                opacity: 0,
+                                                            }}
+                                                            animate={{
+                                                                opacity: 1,
+                                                            }}
+                                                            transition={{
+                                                                duration: 0.2,
+                                                            }}
+                                                            exit={{
+                                                                opacity: 0,
+                                                            }}
+                                                        >
+                                                            <TextField
+                                                                id='outlined-name'
+                                                                value={
+                                                                    editAmount
+                                                                }
+                                                                label='Amount, $'
+                                                                type='number'
+                                                                onChange={event =>
+                                                                    setEditAmount(
+                                                                        Number(
+                                                                            event
+                                                                                .target
+                                                                                .value
+                                                                        )
                                                                     )
-                                                                )
-                                                            }
-                                                            error={
-                                                                !isEditAmountStart
-                                                            }
-                                                            placeholder={
-                                                                'You didn`t write anything'
-                                                            }
-                                                        />
+                                                                }
+                                                                error={
+                                                                    !isEditAmountStart
+                                                                }
+                                                                placeholder={
+                                                                    'You didn`t write anything'
+                                                                }
+                                                            />
+                                                        </motion.div>
                                                     ) : (
                                                         <Typography
                                                             variant='body1'
@@ -484,23 +556,33 @@ const ExpenseItem = ({ expenses }: any) => {
                                     </Card>
                                 </motion.div>
                             ) : (
+                                // code before edit
+
                                 <Card
                                     sx={{
                                         display: 'flex',
-                                        justifyContent: 'space-between',
+                                        justifyContent: {
+                                            xs: 'center',
+                                            sm: 'space-between',
+                                        },
                                         minWidth: 275,
+                                        flexWrap: { xs: 'wrap' },
                                     }}
                                 >
                                     <CardContent
                                         sx={{
                                             display: 'flex',
                                             justifyContent: 'space-between',
+                                            width: { xs: '33%', sm: '15%' },
                                         }}
                                     >
                                         <Paper
                                             elevation={5}
                                             sx={{
-                                                padding: 3,
+                                                padding: {
+                                                    xs: '0.5rem',
+                                                    sm: 3,
+                                                },
                                                 textAlign: 'center',
                                                 width: '50px',
                                             }}
@@ -544,12 +626,16 @@ const ExpenseItem = ({ expenses }: any) => {
                                             justifyContent: 'space-between',
                                             alignItems: 'center',
                                             flex: '1 1',
+                                            marginRight: { xs: '1rem' },
+                                            width: { xs: '33%', sm: '70%' },
                                         }}
                                     >
                                         <Typography
                                             variant='body1'
                                             component='div'
-                                            sx={{ flex: '1 1' }}
+                                            sx={{
+                                                flex: '1 1',
+                                            }}
                                         >
                                             {item.title}
                                         </Typography>
@@ -560,11 +646,15 @@ const ExpenseItem = ({ expenses }: any) => {
                                             ${item.amount}
                                         </Typography>
                                     </Box>
-                                    <CardActions>
+                                    <CardActions
+                                        sx={{ width: { xs: '33%', sm: '15%' } }}
+                                    >
                                         <IconButton
                                             aria-label='edit'
                                             onClick={() => editHandler(item)}
-                                            sx={{ marginLeft: '8px' }}
+                                            sx={{
+                                                marginLeft: '8px',
+                                            }}
                                         >
                                             <EditIcon color='primary' />
                                         </IconButton>

@@ -7,7 +7,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { green, lightBlue } from '@mui/material/colors'
 import { Iexpense, setExpenseToLocalStorage } from './features/expenseSlice'
 import { deleteChart, setChartToLocalStorage } from './features/chartSlice'
-import { chart } from './store/store'
+import { chart, expense } from './store/store'
 
 const App = () => {
     const theme = createTheme({
@@ -23,6 +23,7 @@ const App = () => {
 
     const dispatch = useDispatch()
     const chartAmount = useSelector(chart)
+    const newExpense = useSelector(expense)
 
     useEffect(() => {
         const temp: any = localStorage.getItem('expense')

@@ -10,7 +10,7 @@ import {
     Typography,
 } from '@mui/material'
 import { motion } from 'framer-motion'
-import React, { useEffect } from 'react'
+import React, { Dispatch, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setFilterExpense } from '../features/expenseSlice'
 import { expense, filteredMonth } from '../store/store'
@@ -19,8 +19,8 @@ const ExpensesFilter = ({
     filterChangeHandler,
     cancelFilterHandler,
 }: {
-    filterChangeHandler: Function
-    cancelFilterHandler: any
+    filterChangeHandler: Dispatch<string>
+    cancelFilterHandler: Dispatch<any>
 }) => {
     const dropdownChangeHandler = (event: SelectChangeEvent) => {
         filterChangeHandler(event.target.value)
@@ -52,7 +52,7 @@ const ExpensesFilter = ({
                     Filter by month
                 </Typography>
 
-                <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <FormControl size='small' sx={{ m: 1, minWidth: 120 }}>
                     <Select
                         value={selectedMonth}
                         onChange={dropdownChangeHandler}
